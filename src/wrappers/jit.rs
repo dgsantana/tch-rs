@@ -774,13 +774,13 @@ mod tests {
         round_trip(false);
         round_trip(-1);
         round_trip(42);
-        round_trip(3.1415);
+        round_trip(std::f64::consts::PI);
         round_trip("".to_string());
         round_trip("foobar".to_string());
-        round_trip((42, 3.1415));
+        round_trip((42, std::f64::consts::PI));
         round_trip(vec![42, 1337]);
-        round_trip(vec![2.71828, 3.141592, 299792458.00001]);
-        round_trip((vec![true, false, true, true], vec![2.71828, 3.141592, 299792458.00001]));
+        round_trip(vec![std::f64::consts::E, std::f64::consts::PI, 299792458.00001]);
+        round_trip((vec![true, false, true, true], vec![std::f64::consts::E, std::f64::consts::PI, 299792458.00001]));
         round_trip(vec![IValue::from(42), IValue::from("foobar")]);
         round_trip(vec![
             (IValue::from(42), IValue::from("foobar")),

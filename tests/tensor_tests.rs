@@ -54,9 +54,9 @@ fn iter() {
     let t = Tensor::of_slice(&[7i64, 3, 9, 3, 11]);
     let v = t.iter::<i64>().unwrap().collect::<Vec<_>>();
     assert_eq!(v, [7, 3, 9, 3, 11]);
-    let t = Tensor::of_slice(&[3.14, 15.926, 5.3589, 79.0]);
+    let t = Tensor::of_slice(&[std::f64::consts::PI, 15.926, 5.3589, 79.0]);
     let v = t.iter::<f64>().unwrap().collect::<Vec<_>>();
-    assert_eq!(v, [3.14, 15.926, 5.3589, 79.0]);
+    assert_eq!(v, [std::f64::consts::PI, 15.926, 5.3589, 79.0]);
 }
 
 #[test]
@@ -175,8 +175,8 @@ fn eq() {
     assert!(t == u);
     assert!(t != u - 1);
 
-    let t = Tensor::of_slice(&[3.14]);
-    let u = Tensor::from(3.14);
+    let t = Tensor::of_slice(&[std::f64::consts::PI]);
+    let u = Tensor::from(std::f64::consts::PI);
     // The tensor shape is important for equality.
     assert!(t != u);
     assert!(t.size() != u.size());
@@ -325,7 +325,7 @@ fn bool_tensor() {
 
 #[test]
 fn copy_overflow() {
-    let mut s = [3.14];
+    let mut s = [std::f64::consts::PI];
     let r = Tensor::zeros(&[1], (tch::Kind::Int64, Device::Cpu)).f_copy_data(&mut s, 1);
     assert!(r.is_err());
 

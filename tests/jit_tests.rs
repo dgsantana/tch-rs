@@ -139,7 +139,7 @@ fn create_traced() {
     let xs = Tensor::of_slice(&[1.0, 2.0, 3.0, 4.0, 5.0]);
     let ys = Tensor::of_slice(&[41.0, 1335.0, 0.1415, 4.0, 5.0]);
     let result = modl.method_ts("MyFn", &[xs, ys]).unwrap();
-    assert_eq!(Vec::<f64>::from(&result), [42.0, 1337.0, 3.1415, 8.0, 10.0])
+    assert_eq!(Vec::<f64>::from(&result), [42.0, 1337.0, std::f64::consts::PI, 8.0, 10.0])
 }
 
 // https://github.com/LaurentMazare/tch-rs/issues/475

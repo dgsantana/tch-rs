@@ -2,7 +2,7 @@
 name = "torch-sys"
 version = "0.8.0"
 authors = ["Laurent Mazare <lmazare@gmail.com>"]
-edition = "2018"
+edition = "2021"
 build = "build.rs"
 links = "tch"
 
@@ -13,16 +13,17 @@ categories = ["external-ffi-bindings", "science"]
 license = "MIT/Apache-2.0"
 
 [dependencies]
-libc = "0.2.0"
+libc = "0.2.126"
 
 [build-dependencies]
 anyhow = "1.0"
 cc = "1.0"
-curl = { version = "0.4.43", optional = true }
+curl = { version = "0.4.44", optional = true }
 zip = "0.6"
 
 [features]
 download-libtorch = ["curl"]
+python = []
 doc-only = []
 
 [package.metadata.docs.rs]

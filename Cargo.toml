@@ -2,7 +2,7 @@
 name = "tch"
 version = "0.8.0"
 authors = ["Laurent Mazare <lmazare@gmail.com>"]
-edition = "2018"
+edition = "2021"
 
 description = "Rust wrappers for the PyTorch C++ api (libtorch)."
 repository = "https://github.com/LaurentMazare/tch-rs"
@@ -21,7 +21,8 @@ torch-sys = { version = "0.8.0", path = "torch-sys" }
 zip = "0.6"
 half = "1.6"
 
-cpython = { version = "0.2.0", optional = true }
+cpython = { version = "0.7.0", optional = true }
+pyo3 = { version = "0.16.5", optional = true }
 
 [dev-dependencies]
 anyhow = "1"
@@ -32,6 +33,7 @@ members = ["torch-sys"]
 [features]
 default = ["torch-sys/download-libtorch"]
 python = ["cpython"]
+torch-python = ["torch-sys/python","pyo3"]
 doc-only = ["torch-sys/doc-only"]
 cuda-tests = []
 
