@@ -120,7 +120,19 @@ fn find_python_include_dir() -> PathBuf {
     }
 }
 
-fn prepare_libtorch_dir() -> PathBuf {
+fn find_python_site_packages_dir() -> PathBuf {
+    let python = find_python();
+    let output = Command::new(python)
+        .arg("-c")
+        .arg("from sysconfig import get_paths as gp; print(gp()['purelib'])")
+        .output()
+        .expect("Failed to run python")
+        .stdout;
+    let python_dir = String::from_utf8(output).expect("Python output not utf8").trim().to_owned();
+    PathBuf::from(python_dir)
+}
+
+fn prepare_libtorch_dir(use_python: bool) -> PathBuf {
     let os = env::var("CARGO_CFG_TARGET_OS").expect("Unable to get TARGET_OS");
 
     let device = match env_var_rerun("TORCH_CUDA_VERSION") {
@@ -147,6 +159,12 @@ fn prepare_libtorch_dir() -> PathBuf {
         PathBuf::from(libtorch)
     } else if let Some(pathbuf) = check_system_location() {
         pathbuf
+    } else if use_python {
+        let site_packages = find_python_site_packages_dir();
+        if !site_packages.join("torch").exists() {
+            panic!("When using the torch-python feature please make sure pytorch is installed.");
+        }
+        site_packages.join("torch")
     } else {
         let libtorch_dir = PathBuf::from(env::var("OUT_DIR").unwrap()).join("libtorch");
         if !libtorch_dir.exists() {
@@ -251,7 +269,8 @@ fn make<P: AsRef<Path>>(libtorch: P, use_cuda: bool, use_hip: bool, use_python: 
 
 fn main() {
     if !cfg!(feature = "doc-only") {
-        let libtorch = prepare_libtorch_dir();
+        let use_python = cfg!(feature = "python");
+        let libtorch = prepare_libtorch_dir(use_python);
         // use_cuda is a hacky way to detect whether cuda is available and
         // if it's the case link to it by explicitly depending on a symbol
         // from the torch_cuda library.
@@ -278,7 +297,6 @@ fn main() {
 
         //"Lib/site-packages/torch/lib"
 
-        let use_python = cfg!(feature = "python");
         if use_python
             && !libtorch.join("lib").join("libtorch_python.so").exists()
             && !libtorch.join("lib").join("torch_python.dll").exists()
